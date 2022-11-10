@@ -1,0 +1,141 @@
+
+<html>
+    <head>
+        <title>TEST JUNIOR - C41.ch</title>
+        <meta charset="utf-8">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="jumbotron jumbotron-fluid">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1 class="display-4" style="text-align: right;"><img style="float: left; margin-top: 9px;" width="201" src="img/C41.CH_LOGO_BLU-300x106.png"></img>TEST</h1>
+                                </div>
+                            </div>
+                            <hr>
+                           
+                            <form id="form"  method="post">
+                                <div id="result"></div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="input-group mb-3">
+                                        <!-- The input to use to get value -->
+                                        <input type="text" name="element" id="the-input" class="form-control" placeholder="Element name" aria-label="Element name" aria-describedby="button-add" >
+                                        <button name="addTask" class="btn btn-success" type="submit" id="submit">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <ul  class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    <div class="row">
+                                                        <div class="col-1"><b>ID</b></div>
+                                                        <div class="col-9"><b>Name</b></div>
+                                                        <div class="col-2 text-right"><b>Action</b></div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <!-- the list to compile -->
+                                            
+                                            <ul id="the-list" class="list-group list-group-flush">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <small>@Copyright C41.ch - Tutti i diritti riservati</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <link rel="stylesheet" href="css/libs/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/libs/fontawsome/all.min.css" />
+    <script type="text/javascript" src="js/libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/libs/jquery/jquery-migrate.min.js"></script>
+    <script type="text/javascript" src="js/libs/jquery/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="js/libs/bootstrap/bootstrap.min.js"></script>
+    <script>
+         $(document).on("click", "#submit", function(e){
+            e.preventDefault();
+
+            let name = $("#the-input").val();
+            let submit= $("#submit").val();
+          $.ajax({
+        url: "insert.php",
+        type: "post",
+        data: {
+        name: name,
+        submit: submit
+             },
+             success: function(data){
+                fetch();
+        }
+          });
+          $("#form")[0].reset();
+              })
+
+      function fetch(){
+        $.ajax({
+        url: "fetch.php",
+        type: "post",
+        success: function(data){
+        const arr = JSON.parse(data);
+        
+        let html='';
+        for(let el of arr ){
+           html += '<li class="list-group-item">\
+             <div class="row">\
+               <div class="col-1"><b>' + el.id + '</b></div>\
+                <div class="col-9"><b>' + el.name + '</b></div>\
+                <div class="col-2 text-right"><button id="del" class="btn btn-success"  value="' + el.id + '" > Delete</button></div>\
+                  </div>\
+                 </li>';
+
+        }
+        $("#the-list").html(html);
+        }
+        
+    })
+};
+fetch();
+
+
+$(document).on("click", "#del", function(e){
+    e.preventDefault();
+
+
+    let del_id= $(this).attr('value');
+
+    $.ajax({
+        url: "delete.php",
+        type: "post",
+        data: {
+            del_id: del_id
+                     },
+             success: function(data){
+                 fetch();
+              }
+          });
+})
+    </script>
+</html>
+
+<button></button>
